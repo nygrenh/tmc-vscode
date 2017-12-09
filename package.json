@@ -1,0 +1,46 @@
+{
+    "name": "tmc",
+    "displayName": "tmc",
+    "description": "Test My Code Plugin",
+    "version": "0.0.1",
+    "publisher": "nygrenh",
+    "engines": {
+        "vscode": "^1.18.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:extension.sayHello"
+    ],
+    "main": "./out/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.sayHello",
+                "title": "Hello World"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.10",
+        "@types/node": "^8.0.57",
+        "@types/mocha": "^2.2.42"
+    },
+    "dependencies": {
+        "@types/simple-oauth2": "^1.0.4",
+        "es6-promisify": "^5.0.0",
+        "mkdirp": "^0.5.1",
+        "node-fetch": "^1.7.3",
+        "simple-oauth2": "^1.5.0",
+        "xdg-basedir": "^3.0.0"
+    }
+}
