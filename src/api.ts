@@ -54,6 +54,6 @@ export default class Api {
         }),
       })
     );
-    return res.arrayBuffer();
+    return res.buffer();
   }
 }

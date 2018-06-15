@@ -5,7 +5,7 @@
     "version": "0.0.1",
     "publisher": "nygrenh",
     "engines": {
-        "vscode": "^1.18.0"
+        "vscode": "^1.23.0"
     },
     "categories": [
         "Other"
@@ -30,17 +30,18 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.10",
-        "@types/node": "^8.0.57",
-        "@types/mocha": "^2.2.42"
+        "@types/mocha": "^2.2.48",
+        "@types/node": "^8.10.18",
+        "typescript": "^2.9.1",
+        "vscode": "^1.1.18"
     },
     "dependencies": {
-        "@types/simple-oauth2": "^1.0.4",
+        "@types/simple-oauth2": "^1.1.1",
         "es6-promisify": "^5.0.0",
         "mkdirp": "^0.5.1",
         "node-fetch": "^1.7.3",
-        "simple-oauth2": "^1.5.0",
+        "simple-oauth2": "^1.5.2",
+        "temp-write": "^3.4.0",
         "xdg-basedir": "^3.0.0"
     }
 }
