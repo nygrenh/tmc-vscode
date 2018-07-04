@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import tmcLangs from "./tmcLangs";
+import tmcLangs from "../utils/tmcLangs";
 
 export async function activate() {
   vscode.commands.registerCommand("tmcExtension.runTests", async () => {
@@ -11,7 +11,6 @@ export async function activate() {
 
     const langs = await tmcLangs();
     try {
-      console.log("Foo");
       const output = await langs.runTests(currentWorspacePath);
       const resultsPanel = vscode.window.createWebviewPanel(
         "testResults",
@@ -20,7 +19,6 @@ export async function activate() {
         {}
       );
       resultsPanel.webview.html = resultTemplate(output);
-      console.log("Bar");
     } catch (e) {
       console.error("Failed to run tests", e);
     }
@@ -42,12 +40,24 @@ function resultTemplate(results: string) {
     <title>Test results</title>
   </head>
   <body>
+    <style>
+      #test-progress {
+        appearance: none;
+
+        width: 100%;
+        height: 20px;
+      }
+      progress::-webkit-progress-bar { background: #fff; }
+      progress::-webkit-progress-value { background: #0063a6; }
+    </style>
     <h1>Test results</h1>
+    <progress value="${passedResults.length/testResults.length * 100}" max="100" id="test-progress"></progress>
     <p>Status: ${obj.status}</p>
     <p>${passedResults.length}/${testResults.length} passed</p>
     ${firstFailure &&
       `<p><b>${firstFailure.name}</b>: ${firstFailure.message}</p>`}
     <pre><code>${pretty}</code></pre>
   </body>
-  </html>`;
+  </html>
+`;
 }

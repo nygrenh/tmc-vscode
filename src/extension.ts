@@ -15,18 +15,18 @@ import * as simpleOauth2 from "simple-oauth2";
 import * as tempWrite from "temp-write";
 import { join } from "path";
 
-import Api from "./api";
+import Api from "./services/tmc";
 
 import {
   TMC_LANGS_JAR_PATH,
   TMC_LANGS_JAR_URL,
   DATA_DIR,
   PROJECT_FOLDER
-} from "./constants";
+} from "./utils/constants";
 import Settings from "./settings";
 import { QuickPickItem, workspace, Uri } from "vscode";
-import tmcLangs from "./tmcLangs";
-import * as runTests  from "./runTests";
+import tmcLangs from "./utils/tmcLangs";
+import * as runTests  from "./commands/runTests";
 import * as snapshots from './snapshots';
 
 // this method is called when your extension is activated
@@ -122,7 +122,7 @@ export function activate(context: vscode.ExtensionContext) {
       const courseFolder = join(PROJECT_FOLDER, selectedCourseName);
       await mkdirp(courseFolder);
 
-      const foldersToOpen: string[] = []
+      let foldersToOpen: string[] = []
 
       const downloadPromises = courseDetails.exercises.map(async exercise => {
         console.log(`Downloading exercise ${exercise.name}...`);
@@ -135,7 +135,7 @@ export function activate(context: vscode.ExtensionContext) {
       });
       await Promise.all(downloadPromises);
 
-
+      foldersToOpen = foldersToOpen.sort()
       vscode.workspace.onDidChangeWorkspaceFolders((e) => {
         if (foldersToOpen.length === 0) {
           return;

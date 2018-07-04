@@ -1,6 +1,6 @@
 import { ModuleOptions } from 'simple-oauth2';
 import * as promisify from 'es6-promisify';
-import { CONFIG_DIR, SETTINGS_FILE } from './constants';
+import { CONFIG_DIR, SETTINGS_FILE } from './utils/constants';
 const mkdirp = promisify(require('mkdirp'));
 const readFile = promisify(require('fs').readFile);
 const writeFile = promisify(require('fs').writeFile);

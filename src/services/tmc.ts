@@ -1,7 +1,7 @@
 import * as fetch from 'node-fetch';
 import { Request, Headers } from 'node-fetch';
 
-export default class Api {
+export default class TMCService {
   accessToken: string;
 
   constructor(accessToken: string) {
