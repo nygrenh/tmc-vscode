@@ -11,14 +11,18 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.onStartUp"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "extension.sayHello",
-                "title": "Hello World"
+                "command": "extension.onStartUp",
+                "title": "Log in to TMC"
+            },
+            {
+                "command": "tmcExtension.runTests",
+                "title": "TMC: Run tests"
             }
         ]
     },

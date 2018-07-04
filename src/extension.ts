@@ -26,6 +26,8 @@ import {
 import Settings from "./settings";
 import { QuickPickItem, workspace, Uri } from "vscode";
 import tmcLangs from "./tmcLangs";
+import * as runTests  from "./runTests";
+import * as snapshots from './snapshots';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -37,8 +39,10 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with  registerCommand
   // The commandId parameter must match the command field in package.json
+  runTests.activate();
+  snapshots.activate();
   let disposable = vscode.commands.registerCommand(
-    "extension.sayHello",
+    "extension.onStartUp",
     async () => {
       const settings = new Settings();
       await settings.setup();
@@ -117,25 +121,46 @@ export function activate(context: vscode.ExtensionContext) {
       await mkdirp(PROJECT_FOLDER);
       const courseFolder = join(PROJECT_FOLDER, selectedCourseName);
       await mkdirp(courseFolder);
+
+      const foldersToOpen: string[] = []
+
       const downloadPromises = courseDetails.exercises.map(async exercise => {
         console.log(`Downloading exercise ${exercise.name}...`);
         const buffer = await api.downloadExercise(exercise);
         const filepath = await tempWrite(buffer, "exercise.zip");
         const Langs = await tmcLangs();
-        await Langs.extractProject(filepath, join(courseFolder, exercise.name));
-        workspace.updateWorkspaceFolders(
-          workspace.workspaceFolders ? workspace.workspaceFolders.length : 0,
-          null,
-          { uri: Uri.file(courseFolder) }
-        );
+        const exerciseFolder = join(courseFolder, exercise.name);
+        await Langs.extractProject(filepath, exerciseFolder);
+        foldersToOpen.push(exerciseFolder);
       });
       await Promise.all(downloadPromises);
+
+
+      vscode.workspace.onDidChangeWorkspaceFolders((e) => {
+        if (foldersToOpen.length === 0) {
+          return;
+        }
+        scheduleOpenWorkspaceFolder(foldersToOpen.pop());
+      })
+      if (foldersToOpen.length > 0) {
+        scheduleOpenWorkspaceFolder(foldersToOpen.pop());
+      }
+
       await vscode.window.showInformationMessage("All exercises downloaded!");
     }
   );
 
   context.subscriptions.push(disposable);
   startupActions();
+}
+
+function scheduleOpenWorkspaceFolder(folder: string) {
+  console.log(`Trying to open ${folder}`)
+  workspace.updateWorkspaceFolders(
+    workspace.workspaceFolders ? workspace.workspaceFolders.length : 0,
+    null,
+    { uri: Uri.file(folder) }
+  );
 }
 
 async function login(settings: Settings) {
